@@ -1,0 +1,16 @@
+{
+  "description": "This simple GNOME extension lets you invert either the entire screen or only the active window’s colors.",
+  "name": "Invert Screen Colors",
+  "settings-schema": "org.gnome.shell.extensions.invert-screen-colors",
+  "shell-version": [
+    "45",
+    "46",
+    "47",
+    "48",
+    "49",
+    "50"
+  ],
+  "url": "https://github.com/ilija/invertscreencolors-gnome",
+  "uuid": "invertscreencolors@ilijaculap",
+  "version": 1
+}
