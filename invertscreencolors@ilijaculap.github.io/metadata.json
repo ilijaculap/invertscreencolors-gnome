@@ -1,5 +1,5 @@
 {
-  "description": "This simple GNOME extension lets you invert either the entire screen or only the active window’s colors.",
+  "description": "This simple GNOME extension lets you invert either the entire screen or only the active window colors. Use CTRL+ALT+I for entire screen and SUPER+I for window effect only.",
   "name": "Invert Screen Colors",
   "settings-schema": "org.gnome.shell.extensions.invert-screen-colors",
   "shell-version": [
@@ -10,6 +10,9 @@
     "49",
     "50"
   ],
+  "donations": {
+    "paypal": "ilijac14"
+  },
   "url": "https://github.com/ilijaculap/invertscreencolors-gnome",
   "uuid": "invertscreencolors@ilijaculap.github.io",
   "version": 1
