@@ -9,6 +9,7 @@ import * as Main from 'resource:///org/gnome/shell/ui/main.js';
 import Meta from 'gi://Meta';
 import Shell from 'gi://Shell';
 import Clutter from 'gi://Clutter';
+import Cogl from 'gi://Cogl';
 import GObject from 'gi://GObject';
 import {Extension, gettext as _} from 'resource:///org/gnome/shell/extensions/extension.js';
 
@@ -17,19 +18,33 @@ var SHORTCUT_WD = 'invert-wd-shortcut';
 
 export const InversionEffect = GObject.registerClass(
 class InversionEffect extends Clutter.ShaderEffect {
-	vfunc_get_static_shader_source() {
-		return ' \
-			uniform sampler2D tex; \
-			void main() { \
-				vec4 color = texture2D(tex, cogl_tex_coord_in[0].st); \
-				if(color.a > 0.0) { \
-					color.rgb /= color.a; \
-				} \
-				color.rgb = vec3(1.0, 1.0, 1.0) - color.rgb; \
-				color.rgb *= color.a; \
-				cogl_color_out = color * cogl_color_in; \
-			} \
-		';
+	
+	vfunc_get_static_snippet() {
+		 const snippet = Cogl.Snippet.new(
+            Cogl.SnippetHook.FRAGMENT,
+            `
+                uniform sampler2D tex;
+            `,
+            null
+        );
+
+        snippet.set_replace(`
+            vec4 color = texture2D(
+                tex,
+                cogl_tex_coord0_in.st
+            );
+
+            if (color.a > 0.0) {
+                color.rgb /= color.a;
+            }
+
+            color.rgb = vec3(1.0) - color.rgb;
+            color.rgb *= color.a;
+
+            cogl_color_out = color * cogl_color_in;
+        `);
+
+        return snippet;
 	}
 
 	vfunc_paint_target(...args) {
@@ -59,6 +74,8 @@ export default class InvertWindow extends Extension {
 
 		// For fullscreen
 		if(area == "fs") {
+		    
+
 			if(Main.uiGroup.get_effect('invert-screen-color')) {
 			    Main.uiGroup.remove_effect_by_name('invert-screen-color');
 		    }
@@ -79,7 +96,7 @@ export default class InvertWindow extends Extension {
 				else {
 					let effect_wd = new InversionEffect();
 					actor.add_effect_with_name('invert-window-color', effect_wd);
-				}
+					}
 			}}, this);
 		}
 	}
@@ -88,7 +105,7 @@ export default class InvertWindow extends Extension {
 
 		// Get settings
 		this._settings = this.getSettings();
-
+		
 		// Clean effect 
 		this.clean_effect();
 
